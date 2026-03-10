@@ -354,11 +354,20 @@
   }
 
   // ---- DRAW LOGIC ----
-  function drawThreeCards(chosenNumber) {
-    // The chosen number (1-21) becomes the first card (Passé)
+  function isSinglePlan() {
+    return currentSession && currentSession.plan === "single";
+  }
+
+  function drawCards(chosenNumber) {
+    // The chosen number (1-21) becomes the first card
     const chosenCard = PAPYRUS_DB[chosenNumber - 1];
+
+    // Single plan = 1 card only
+    if (isSinglePlan()) {
+      return [chosenCard];
+    }
     
-    // Get remaining cards (exclude the chosen one)
+    // Other plans = 3 cards (Passé, Présent, Futur)
     const remaining = PAPYRUS_DB.filter(function(card) {
       return card.id !== chosenNumber;
     });
@@ -384,7 +393,7 @@
 
   function startRitual(chosenNumber) {
     showScreen("screen-ritual");
-    drawnCards = drawThreeCards(chosenNumber);
+    drawnCards = drawCards(chosenNumber);
 
     let step = 0;
     const interval = setInterval(function () {
@@ -408,34 +417,69 @@
   function showResult() {
     showScreen("screen-result");
 
-    const readingIds = ["reading-past", "reading-present", "reading-future"];
-    const cards = document.querySelectorAll(".papyrus-card");
+    var singleMode = isSinglePlan();
+    var readingIds = ["reading-past", "reading-present", "reading-future"];
+    var allCards = document.querySelectorAll(".papyrus-card");
+    var allReadings = readingIds.map(function(id) { return document.getElementById(id); });
+    var resultTitle = document.querySelector(".result-title");
 
-    // Reset cards
-    cards.forEach(function (card) {
+    // Reset all cards and readings
+    allCards.forEach(function (card) {
       card.classList.remove("revealed");
+      card.style.display = "";
+    });
+    allReadings.forEach(function (r) {
+      if (r) r.style.display = "";
     });
     readingArea.classList.remove("visible");
 
+    if (singleMode) {
+      // Single plan: hide cards 2 & 3, show only 1 card
+      resultTitle.textContent = "Ton Papyrus Sacr\u00e9";
+      allCards[1].style.display = "none";
+      allCards[2].style.display = "none";
+      allReadings[1].style.display = "none";
+      allReadings[2].style.display = "none";
+    } else {
+      resultTitle.textContent = "Ton Tirage Sacr\u00e9";
+    }
+
     // Populate card data
     drawnCards.forEach(function (papyrus, idx) {
-      const card = cards[idx];
+      var card = allCards[idx];
       card.querySelector(".card-number").textContent = papyrus.name;
       card.querySelector(".card-title").textContent = papyrus.title;
+
+      // For single mode, change label from "Passé" to "Ton Papyrus"
+      if (singleMode && idx === 0) {
+        card.querySelector(".card-label").textContent = "Ton Papyrus";
+      } else {
+        var labels = ["Pass\u00e9", "Pr\u00e9sent", "Futur"];
+        card.querySelector(".card-label").textContent = labels[idx];
+      }
       
       // Set card image
-      const imageArea = card.querySelector(".card-image-area");
+      var imageArea = card.querySelector(".card-image-area");
       imageArea.innerHTML = '<img src="' + papyrus.image + '" alt="Papyrus ' + papyrus.name + '" class="card-img">';
 
       // Reading section
-      const reading = document.getElementById(readingIds[idx]);
+      var reading = document.getElementById(readingIds[idx]);
       reading.querySelector(".reading-card-name").textContent = papyrus.name;
       reading.querySelector(".reading-card-title").textContent = papyrus.title;
       reading.querySelector(".reading-text").textContent = papyrus.message;
+
+      // For single mode, change reading label
+      if (singleMode && idx === 0) {
+        reading.querySelector(".reading-label").textContent = "Ton Papyrus";
+      } else {
+        var readLabels = ["Pass\u00e9", "Pr\u00e9sent", "Futur"];
+        reading.querySelector(".reading-label").textContent = readLabels[idx];
+      }
     });
 
     // Reveal cards one by one with delay
-    cards.forEach(function (card, idx) {
+    var visibleCards = singleMode ? [allCards[0]] : Array.from(allCards);
+    visibleCards.forEach(function (card, idx) {
       setTimeout(function () {
         card.classList.add("revealed");
         playRevealSound();
@@ -445,7 +489,7 @@
     // Show readings after all cards revealed
     setTimeout(function () {
       readingArea.classList.add("visible");
-    }, 600 + cards.length * 800 + 400);
+    }, 600 + visibleCards.length * 800 + 400);
   }
 
   // ---- SOUND ----
