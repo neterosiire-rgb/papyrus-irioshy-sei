@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Papyrus IRIOSHY-SEI — Tirage Divinatoire Sacré</title>
+<meta name="description" content="Tirez vos 3 papyrus sacrés IRIOSHY-SEI et recevez votre guidance du jour. Un oracle ancestral par Neter Osiirê.">
+
+<!-- Fonts -->
+<link href="https://api.fontshare.com/v2/css?f[]=zodiak@400,500,700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="./base.css">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <!-- ========== SCREEN 1: WELCOME ========== -->
+  <section id="screen-welcome" class="screen active">
+    <div class="welcome-bg">
+      <div class="sacred-geometry"></div>
+    </div>
+    <div class="welcome-content">
+      <div class="logo-mark">
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Papyrus IRIOSHY-SEI" class="logo-svg">
+          <circle cx="60" cy="60" r="56" stroke="url(#gold-grad)" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="60" cy="60" r="42" stroke="url(#gold-grad)" stroke-width="1"/>
+          <path d="M60 4 L60 116" stroke="url(#gold-grad)" stroke-width="0.5" opacity="0.3"/>
+          <path d="M4 60 L116 60" stroke="url(#gold-grad)" stroke-width="0.5" opacity="0.3"/>
+          <!-- Ankh symbol -->
+          <ellipse cx="60" cy="38" rx="12" ry="15" stroke="url(#gold-grad)" stroke-width="2" fill="none"/>
+          <line x1="60" y1="53" x2="60" y2="90" stroke="url(#gold-grad)" stroke-width="2"/>
+          <line x1="46" y1="68" x2="74" y2="68" stroke="url(#gold-grad)" stroke-width="2"/>
+          <defs>
+            <linearGradient id="gold-grad" x1="0" y1="0" x2="120" y2="120">
+              <stop offset="0%" stop-color="#c9a84c"/>
+              <stop offset="50%" stop-color="#f0d78c"/>
+              <stop offset="100%" stop-color="#c9a84c"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <h1 class="title-main">Papyrus IRIOSHY-SEI</h1>
+      <p class="subtitle">Oracle Divinatoire Sacré</p>
+      <p class="subtitle-desc">Tirage des 3 Papyrus — Passé, Présent, Futur</p>
+      <p class="welcome-text">
+        Ici, le mystère est la loi. Ce ne sont pas seulement toi qui choisis les papyrus : 
+        ce sont aussi les papyrus qui te choisissent.<br>
+        Fais confiance à ton ressenti et laisse-toi guider.
+      </p>
+      <p class="author-credit">Par Neter Osiirê</p>
+      <button class="btn-sacred" id="btn-start" aria-label="Commencer le tirage">
+        <span class="btn-text">Entrer dans l'Oracle</span>
+        <span class="btn-glow"></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ========== SCREEN 2: ACCESS GATE (Payment) ========== -->
+  <section id="screen-access" class="screen">
+    <button class="btn-back" id="btn-back-access" aria-label="Retour">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <div class="access-content">
+      <h2 class="section-title">Accès au Tirage Sacré</h2>
+      <p class="access-desc">Pour recevoir ta guidance des 3 Papyrus, un code d'accès est nécessaire.</p>
+      
+      <div class="access-options">
+        <div class="access-card">
+          <div class="access-card-header">
+            <span class="access-icon">𓂀</span>
+            <h3>Tirage Unique</h3>
+          </div>
+          <p class="access-price">9,99 €</p>
+          <p class="access-detail">Un tirage complet de 3 papyrus avec interprétation</p>
+          <button class="btn-sacred btn-small" data-plan="single">Choisir</button>
+        </div>
+        
+        <div class="access-card featured">
+          <div class="badge-popular">Recommandé</div>
+          <div class="access-card-header">
+            <span class="access-icon">𓁹</span>
+            <h3>3 Tirages</h3>
+          </div>
+          <p class="access-price">24,99 €</p>
+          <p class="access-detail">Trois tirages sacrés à utiliser quand tu le souhaites</p>
+          <button class="btn-sacred btn-small" data-plan="triple">Choisir</button>
+        </div>
+        
+        <div class="access-card">
+          <div class="access-card-header">
+            <span class="access-icon">𓆣</span>
+            <h3>Accès Illimité</h3>
+          </div>
+          <p class="access-price">49,99 € <span class="price-period">/ mois</span></p>
+          <p class="access-detail">Tirages illimités et accès aux papyrus avancés</p>
+          <button class="btn-sacred btn-small" data-plan="unlimited">Choisir</button>
+        </div>
+      </div>
+
+      <div class="divider-line"></div>
+      
+      <div class="code-section">
+        <p class="code-label">Tu as déjà un code d'accès ?</p>
+        <div class="code-input-wrap">
+          <input type="text" id="access-code" placeholder="Entre ton code ici" maxlength="16" autocomplete="off" spellcheck="false">
+          <button class="btn-sacred btn-small" id="btn-validate-code">Valider</button>
+        </div>
+        <p class="code-error" id="code-error" role="alert"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SCREEN 3: KEY INPUT ========== -->
+  <section id="screen-key" class="screen">
+    <button class="btn-back" id="btn-back-key" aria-label="Retour">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <div class="key-content">
+      <div class="draws-remaining-badge" id="draws-remaining-badge" style="display:none;"></div>
+      <h2 class="section-title">Choisis ton Papyrus</h2>
+      <p class="key-desc">
+        Ferme les yeux un instant. Respire.<br>
+        Puis choisis un chiffre entre 1 et 21.<br>
+        Ce chiffre est ta clé sacrée. Il guidera les papyrus vers toi.
+      </p>
+      <div class="key-input-area">
+        <input type="number" id="sacred-key" min="1" max="21" placeholder="..." class="key-input" autocomplete="off">
+        <p class="key-hint">Choisis un chiffre entre 1 et 21</p>
+      </div>
+      <button class="btn-sacred" id="btn-draw" disabled aria-label="Lancer le tirage">
+        <span class="btn-text">Invoquer les Papyrus</span>
+        <span class="btn-glow"></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ========== SCREEN 4: RITUAL ANIMATION ========== -->
+  <section id="screen-ritual" class="screen">
+    <div class="ritual-container">
+      <div class="ritual-circle">
+        <svg viewBox="0 0 300 300" class="ritual-svg">
+          <circle cx="150" cy="150" r="140" stroke="url(#gold-grad2)" stroke-width="1" fill="none" opacity="0.3"/>
+          <circle cx="150" cy="150" r="100" stroke="url(#gold-grad2)" stroke-width="1.5" fill="none" class="ritual-ring-1"/>
+          <circle cx="150" cy="150" r="60" stroke="url(#gold-grad2)" stroke-width="2" fill="none" class="ritual-ring-2"/>
+          <defs>
+            <linearGradient id="gold-grad2" x1="0" y1="0" x2="300" y2="300">
+              <stop offset="0%" stop-color="#c9a84c"/>
+              <stop offset="50%" stop-color="#f0d78c"/>
+              <stop offset="100%" stop-color="#c9a84c"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="ritual-eye">𓂀</div>
+      </div>
+      <p class="ritual-text" id="ritual-text">Les papyrus s'éveillent...</p>
+    </div>
+  </section>
+
+  <!-- ========== SCREEN 5: RESULT ========== -->
+  <section id="screen-result" class="screen">
+    <div class="result-container">
+      <h2 class="section-title result-title">Ton Tirage Sacré</h2>
+      
+      <div class="cards-row">
+        <!-- Card 1: Past -->
+        <div class="papyrus-card" data-position="past">
+          <div class="card-inner">
+            <div class="card-back">
+              <div class="card-back-pattern">
+                <span class="hieroglyph">𓂀</span>
+              </div>
+            </div>
+            <div class="card-front">
+              <div class="card-label">Passé</div>
+              <div class="card-image-area">
+                <div class="card-placeholder">
+                  <span class="card-number"></span>
+                </div>
+              </div>
+              <h3 class="card-title"></h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Present -->
+        <div class="papyrus-card" data-position="present">
+          <div class="card-inner">
+            <div class="card-back">
+              <div class="card-back-pattern">
+                <span class="hieroglyph">𓁹</span>
+              </div>
+            </div>
+            <div class="card-front">
+              <div class="card-label">Présent</div>
+              <div class="card-image-area">
+                <div class="card-placeholder">
+                  <span class="card-number"></span>
+                </div>
+              </div>
+              <h3 class="card-title"></h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Future -->
+        <div class="papyrus-card" data-position="future">
+          <div class="card-inner">
+            <div class="card-back">
+              <div class="card-back-pattern">
+                <span class="hieroglyph">𓆣</span>
+              </div>
+            </div>
+            <div class="card-front">
+              <div class="card-label">Futur</div>
+              <div class="card-image-area">
+                <div class="card-placeholder">
+                  <span class="card-number"></span>
+                </div>
+              </div>
+              <h3 class="card-title"></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message area -->
+      <div class="reading-area" id="reading-area">
+        <div class="reading-card" id="reading-past">
+          <h4><span class="reading-label">Passé</span> — <span class="reading-card-name"></span></h4>
+          <p class="reading-card-title reading-subtitle"></p>
+          <p class="reading-divider">𓂀 Message 𓂀</p>
+          <p class="reading-text"></p>
+        </div>
+        <div class="reading-card" id="reading-present">
+          <h4><span class="reading-label">Présent</span> — <span class="reading-card-name"></span></h4>
+          <p class="reading-card-title reading-subtitle"></p>
+          <p class="reading-divider">𓂀 Message 𓂀</p>
+          <p class="reading-text"></p>
+        </div>
+        <div class="reading-card" id="reading-future">
+          <h4><span class="reading-label">Futur</span> — <span class="reading-card-name"></span></h4>
+          <p class="reading-card-title reading-subtitle"></p>
+          <p class="reading-divider">𓂀 Message 𓂀</p>
+          <p class="reading-text"></p>
+        </div>
+      </div>
+
+      <button class="btn-sacred" id="btn-new-draw" aria-label="Nouveau tirage">
+        <span class="btn-text">Nouveau Tirage</span>
+        <span class="btn-glow"></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <p>&copy; 2026 Neter Osiirê — Papyrus IRIOSHY-SEI</p>
+    <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a>
+  </footer>
+
+  <!-- Audio elements -->
+  <audio id="audio-gong" preload="auto">
+    <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
+  </audio>
+
+  <script src="./app.js"></script>
+</body>
+</html>
