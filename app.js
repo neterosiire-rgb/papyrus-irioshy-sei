@@ -462,8 +462,10 @@
     var allReadings = readingIds.map(function(id) { return document.getElementById(id); });
     var resultTitle = document.querySelector(".result-title");
 
-    // Reset all cards and readings
+    // Reset all cards and readings — disable transition for instant reset
     allCards.forEach(function (card) {
+      var inner = card.querySelector(".card-inner");
+      if (inner) inner.style.transition = "none";
       card.classList.remove("revealed");
       card.style.display = "";
     });
@@ -471,6 +473,15 @@
       if (r) r.style.display = "";
     });
     readingArea.classList.remove("visible");
+
+    // Force browser to apply the non-revealed state before re-enabling transition
+    void allCards[0].offsetWidth;
+
+    // Re-enable transitions
+    allCards.forEach(function (card) {
+      var inner = card.querySelector(".card-inner");
+      if (inner) inner.style.transition = "";
+    });
 
     if (singleMode) {
       // Single plan: hide cards 2 & 3, show only 1 card
