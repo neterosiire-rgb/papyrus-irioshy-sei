@@ -185,8 +185,10 @@
   const PLAN_DRAWS = {
     single: 1,
     triple: 3,
-    unlimited: 999
+    unlimited: 3  // 3 tirages par jour pendant 30 jours
   };
+
+  const UNLIMITED_DAILY_LIMIT = 3;
 
   // ---- SESSION / persistent storage ----
   var _store = window["local" + "Storage"];
@@ -243,6 +245,38 @@
     return null;
   }
 
+  // ---- DAILY DRAW TRACKING FOR UNLIMITED PLAN ----
+  function getTodayKey() {
+    var now = new Date();
+    return now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
+  }
+
+  function getDailyDraws() {
+    try {
+      var data = _store.getItem("papyrus_daily_draws");
+      if (data) {
+        var parsed = JSON.parse(data);
+        // Reset if it's a new day
+        if (parsed.date !== getTodayKey()) {
+          return { date: getTodayKey(), count: 0 };
+        }
+        return parsed;
+      }
+    } catch (e) { /* ignore */ }
+    return { date: getTodayKey(), count: 0 };
+  }
+
+  function saveDailyDraws(daily) {
+    try {
+      _store.setItem("papyrus_daily_draws", JSON.stringify(daily));
+    } catch (e) { /* ignore */ }
+  }
+
+  function getDailyRemaining() {
+    var daily = getDailyDraws();
+    return Math.max(0, UNLIMITED_DAILY_LIMIT - daily.count);
+  }
+
   // ---- CHECK EXISTING SESSION ----
   function checkExistingSession() {
     var session = getSession();
@@ -254,7 +288,7 @@
       return null;
     }
 
-    // Unlimited plan: only check expiration date, NOT draw count
+    // Unlimited plan: check expiration only (daily limit checked separately)
     if (session.plan === "unlimited") {
       return session;
     }
@@ -563,6 +597,11 @@
   btnDraw.addEventListener("click", function () {
     const key = parseInt(sacredKeyInput.value, 10);
     if (key >= 1 && key <= 21) {
+      // Check daily limit for unlimited plan before drawing
+      if (currentSession && currentSession.plan === "unlimited" && getDailyRemaining() <= 0) {
+        showDailyLimitMessage();
+        return;
+      }
       // Use one draw from session if applicable
       if (currentSession) {
         useOneDraw();
@@ -575,7 +614,7 @@
   btnNewDraw.addEventListener("click", function () {
     // Check if session has draws remaining
     if (currentSession) {
-      // Unlimited plan: always allow if not expired
+      // Unlimited plan: check expiration + daily limit
       if (currentSession.plan === "unlimited") {
         if (currentSession.expiresAt && new Date() > new Date(currentSession.expiresAt)) {
           // Expired — go back to payment screen
@@ -587,7 +626,12 @@
           showScreen("screen-access");
           return;
         }
-        // Not expired — allow new draw
+        // Check daily limit
+        if (getDailyRemaining() <= 0) {
+          showDailyLimitMessage();
+          return;
+        }
+        // Daily draws remaining — allow new draw
         sacredKeyInput.value = "";
         btnDraw.disabled = true;
         showScreen("screen-key");
@@ -611,6 +655,34 @@
     showScreen("screen-key");
   });
 
+  // ---- DAILY LIMIT MESSAGE ----
+  function showDailyLimitMessage() {
+    var overlay = document.createElement("div");
+    overlay.className = "payment-success-overlay";
+    overlay.innerHTML =
+      '<div class="payment-success-box">' +
+        '<div class="payment-success-icon">\u2726</div>' +
+        '<h2>Tirages du jour termin\u00e9s</h2>' +
+        '<p>Tu as utilis\u00e9 tes 3 tirages pour aujourd\u0027hui.</p>' +
+        '<p style="opacity:0.7;font-size:0.95rem;">Reviens demain pour 3 nouveaux tirages. Ton abonnement est toujours actif.</p>' +
+        '<button class="btn-sacred btn-small" id="btn-close-limit">' +
+          '<span class="btn-text">J\u0027ai compris</span>' +
+          '<span class="btn-glow"></span>' +
+        '</button>' +
+      '</div>';
+
+    document.body.appendChild(overlay);
+    void overlay.offsetWidth;
+    overlay.classList.add("visible");
+
+    document.getElementById("btn-close-limit").addEventListener("click", function () {
+      overlay.classList.remove("visible");
+      setTimeout(function () {
+        overlay.remove();
+      }, 400);
+    });
+  }
+
   // ---- DRAWS REMAINING DISPLAY ----
   function updateDrawsDisplay() {
     var badge = document.getElementById("draws-remaining-badge");
@@ -618,11 +690,12 @@
 
     var remaining = currentSession.drawsAllowed - currentSession.drawsUsed;
     if (currentSession.plan === "unlimited") {
-      var expText = "Acc\u00e8s illimit\u00e9 \u2726";
+      var dailyLeft = getDailyRemaining();
+      var expText = dailyLeft + "/3 tirage" + (dailyLeft > 1 ? "s" : "") + " aujourd\u0027hui";
       if (currentSession.expiresAt) {
         var expDate = new Date(currentSession.expiresAt);
         var jours = Math.max(0, Math.ceil((expDate.getTime() - Date.now()) / (24 * 60 * 60 * 1000)));
-        expText = "Acc\u00e8s illimit\u00e9 \u2014 " + jours + "j restant" + (jours > 1 ? "s" : "");
+        expText += " \u2014 " + jours + "j restant" + (jours > 1 ? "s" : "");
       }
       badge.textContent = expText;
       badge.style.display = "block";
@@ -635,8 +708,11 @@
   // ---- USE A DRAW ----
   function useOneDraw() {
     if (!currentSession) return;
-    // Unlimited plan: don't count draws, only expiration matters
+    // Unlimited plan: count daily draws
     if (currentSession.plan === "unlimited") {
+      var daily = getDailyDraws();
+      daily.count++;
+      saveDailyDraws(daily);
       updateDrawsDisplay();
       return;
     }
