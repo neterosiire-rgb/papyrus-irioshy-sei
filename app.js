@@ -254,7 +254,12 @@
       return null;
     }
 
-    // Check if draws remain
+    // Unlimited plan: only check expiration date, NOT draw count
+    if (session.plan === "unlimited") {
+      return session;
+    }
+
+    // Single/Triple plans: check if draws remain
     if (session.drawsUsed >= session.drawsAllowed) {
       clearSession();
       return null;
@@ -570,14 +575,33 @@
   btnNewDraw.addEventListener("click", function () {
     // Check if session has draws remaining
     if (currentSession) {
+      // Unlimited plan: always allow if not expired
+      if (currentSession.plan === "unlimited") {
+        if (currentSession.expiresAt && new Date() > new Date(currentSession.expiresAt)) {
+          // Expired — go back to payment screen
+          clearSession();
+          currentSession = null;
+          hasAccess = false;
+          var badge = document.getElementById("draws-remaining-badge");
+          if (badge) badge.style.display = "none";
+          showScreen("screen-access");
+          return;
+        }
+        // Not expired — allow new draw
+        sacredKeyInput.value = "";
+        btnDraw.disabled = true;
+        showScreen("screen-key");
+        return;
+      }
+      // Single/Triple plans: check remaining draws
       var remaining = currentSession.drawsAllowed - currentSession.drawsUsed;
       if (remaining <= 0) {
         // No draws left — go back to payment screen
         clearSession();
         currentSession = null;
         hasAccess = false;
-        var badge = document.getElementById("draws-remaining-badge");
-        if (badge) badge.style.display = "none";
+        var badge2 = document.getElementById("draws-remaining-badge");
+        if (badge2) badge2.style.display = "none";
         showScreen("screen-access");
         return;
       }
@@ -611,6 +635,11 @@
   // ---- USE A DRAW ----
   function useOneDraw() {
     if (!currentSession) return;
+    // Unlimited plan: don't count draws, only expiration matters
+    if (currentSession.plan === "unlimited") {
+      updateDrawsDisplay();
+      return;
+    }
     currentSession.drawsUsed++;
     saveSession(currentSession);
     updateDrawsDisplay();
