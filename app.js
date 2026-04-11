@@ -213,14 +213,31 @@
     } catch (e) { /* ignore */ }
   }
 
-  // ---- DETECT STRIPE PAYMENT REDIRECT ----
-  function checkPaymentRedirect() {
+    // ---- DETECT STRIPE PAYMENT REDIRECT (SERVER-VERIFIED) ----
+  async function checkPaymentRedirect() {
     var params = new URLSearchParams(window.location.search);
     var sessionId = params.get("session_id");
     var plan = params.get("plan");
 
     if (sessionId && sessionId.startsWith("cs_") && plan && PLAN_DRAWS[plan]) {
-      // Payment successful — create session
+      // Verify session with backend before granting access
+      try {
+        var response = await fetch("https://lartdimue.me/oracle-api/verify-session.php?session_id=" + encodeURIComponent(sessionId));
+        var data = await response.json();
+        if (!data.valid) {
+          // Invalid or already used session
+          if (window.history && window.history.replaceState) {
+            var cleanUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+          }
+          return null;
+        }
+      } catch (e) {
+        // Network error - deny access for safety
+        return null;
+      }
+
+      // Server confirmed payment - create session
       var drawsAllowed = PLAN_DRAWS[plan];
       var now = new Date();
       var session = {
@@ -779,20 +796,21 @@
   document.head.appendChild(style);
 
   // Check for payment redirect OR existing session
-  var redirectSession = checkPaymentRedirect();
-  if (redirectSession) {
-    // Just paid — show success then go to oracle
-    hasAccess = true;
-    currentSession = redirectSession;
-    updateDrawsDisplay();
-    showPaymentSuccess(redirectSession.plan);
-  } else {
-    var existingSession = checkExistingSession();
-    if (existingSession) {
+  checkPaymentRedirect().then(function (redirectSession) {
+    if (redirectSession) {
+      // Just paid — show success then go to oracle
       hasAccess = true;
-      currentSession = existingSession;
+      currentSession = redirectSession;
       updateDrawsDisplay();
+      showPaymentSuccess(redirectSession.plan);
+    } else {
+      var existingSession = checkExistingSession();
+      if (existingSession) {
+        hasAccess = true;
+        currentSession = existingSession;
+        updateDrawsDisplay();
+      }
     }
-  }
+  });
 
 })();
