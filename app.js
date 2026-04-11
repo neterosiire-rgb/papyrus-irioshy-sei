@@ -179,7 +179,7 @@
   ];
 
   // ---- VALID ACCESS CODES (demo) ----
-  const VALID_CODES = ["IRIOSHY2026", "PAPYRUS777", "OSIIRE888", "DEMO"];
+  const VALID_CODES = ["NETER-SEI-4411", "OSIIRE-DRAGON-2026", "PAPYRUS-SACRE-777"];
 
   // ---- PLAN CONFIGURATION ----
   const PLAN_DRAWS = {
@@ -216,10 +216,10 @@
   // ---- DETECT STRIPE PAYMENT REDIRECT ----
   function checkPaymentRedirect() {
     var params = new URLSearchParams(window.location.search);
-    var paid = params.get("paid");
+    var sessionId = params.get("session_id");
     var plan = params.get("plan");
 
-    if (paid === "true" && plan && PLAN_DRAWS[plan]) {
+    if (sessionId && sessionId.startsWith("cs_") && plan && PLAN_DRAWS[plan]) {
       // Payment successful — create session
       var drawsAllowed = PLAN_DRAWS[plan];
       var now = new Date();
