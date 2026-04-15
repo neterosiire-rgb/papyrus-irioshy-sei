@@ -379,7 +379,7 @@
       codeError.textContent = "Entre un code d'accès";
       return;
     }
-    if (VALID_CODES.includes(code)) {
+    if (isCodeValid(code)) {
             hasAccess = true;
       var now = new Date();
       currentSession = { plan: "unlimited", drawsAllowed: UNLIMITED_DAILY_LIMIT, drawsUsed: 0, createdAt: now.toISOString(), expiresAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString() };
@@ -394,6 +394,8 @@
   }
 
   // ---- STRIPE PAYMENT LINKS ----
+     const CODE_EXPIRY = { "AVR26": new Date("2026-04-30T23:59:59"), "MAI26": new Date("2026-05-31T23:59:59"), "JUN26": new Date("2026-06-30T23:59:59") };
+     function isCodeValid(code) { if (!VALID_CODES.includes(code)) return false; for (var s in CODE_EXPIRY) { if (code.endsWith("-" + s)) { return new Date() <= CODE_EXPIRY[s]; } } return true; }
   const PAYMENT_LINKS = {
     single: "https://buy.stripe.com/3cIdRa89kdDvbUj3kB1Nu00",
     triple: "https://buy.stripe.com/fZu28s89kbvnbUj9IZ1Nu01",
