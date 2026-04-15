@@ -382,7 +382,7 @@
     if (VALID_CODES.includes(code)) {
             hasAccess = true;
       var now = new Date();
-      currentSession = { plan: "unlimited", drawsAllowed: 3, drawsUsed: 0, createdAt: now.toISOString(), expiresAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString() };
+      currentSession = { plan: "unlimited", drawsAllowed: UNLIMITED_DAILY_LIMIT, drawsUsed: 0, createdAt: now.toISOString(), expiresAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString() };
       saveSession(currentSession);
       updateDrawsDisplay();
       codeError.textContent = "";
