@@ -220,7 +220,7 @@
           return null;
         }
       } catch (e) {
-                    /* server unreachable, allow access with valid Stripe session_id */
+                                return null;
       }
       var drawsAllowed = PLAN_DRAWS[plan];
       var now = new Date();
