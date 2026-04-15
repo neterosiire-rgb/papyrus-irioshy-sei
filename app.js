@@ -1,4 +1,4 @@
-/* ============================
+/*VALID_CODES ============================
    PAPYRUS IRIOSHY-SEI
    Application Logic
    ============================ */
@@ -179,7 +179,7 @@
   ];
 
   // ---- VALID ACCESS CODES (demo) ----
-  const VALID_CODES = ["NETER-SEI-4411", "OSIIRE-DRAGON-2026", "PAPYRUS-SACRE-777"];
+  const VALID_CODES = ["NETER-SEI-4411", "OSIIRE-DRAGON-2026", "PAPYRUS-SACRE-777", "PAPYRUS-SYLVIE-AVR26", "PAPYRUS-OMAIDA-AVR26", "PAPYRUS-NADIA-AVR26", "PAPYRUS-TITAYANA-AVR26"];
 
   // ---- PLAN CONFIGURATION ----
   const PLAN_DRAWS = {
