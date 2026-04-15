@@ -188,7 +188,7 @@
     unlimited: 3  // 3 tirages par jour pendant 30 jours
   };
 
-  const UNLIMITED_DAILY_LIMIT = 3;
+  const UNLIMITED_DAILY_LIMIT = 5;
 
   // ---- SESSION / persistent storage ----
   var _store = window["local" + "Storage"];
@@ -723,7 +723,7 @@
     var remaining = currentSession.drawsAllowed - currentSession.drawsUsed;
     if (currentSession.plan === "unlimited") {
       var dailyLeft = getDailyRemaining();
-      var expText = dailyLeft + "/3 tirage" + (dailyLeft > 1 ? "s" : "") + " aujourd\u0027hui";
+      var expText = dailyLeft + "/" + UNLIMITED_DAILY_LIMIT + " tirage" + (dailyLeft > 1 ? "s" : "") + " aujourd\u0027hui";
       if (currentSession.expiresAt) {
         var expDate = new Date(currentSession.expiresAt);
         var jours = Math.max(0, Math.ceil((expDate.getTime() - Date.now()) / (24 * 60 * 60 * 1000)));
