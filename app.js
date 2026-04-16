@@ -374,9 +374,9 @@
   }
   // ---- STRIPE PAYMENT LINKS ----
   const PAYMENT_LINKS = {
-    single: "https://buy.stripe.com/3cIdRa89kdDvbUj3kB1Nu00",
-    triple: "https://buy.stripe.com/fZu28s89kbvnbUj9IZ1Nu01",
-    unlimited: "https://buy.stripe.com/9B69AUexIeHz6zZbR71Nu02"
+            single: "https://buy.stripe.com/00waEY0GSbvngaz4oF1Nu06",
+            triple: "https://buy.stripe.com/5kQ9AU3T49nf3nN3kB1Nu07",
+            unlimited: "https://buy.stripe.com/14A14o1KW7f7e2r2gx1Nu08"
   };
   function handlePlanChoice(plan) {
     const link = PAYMENT_LINKS[plan];
