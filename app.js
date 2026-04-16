@@ -351,25 +351,60 @@
     return true;
   }
   // ---- ACCESS VALIDATION ----
-  function validateCode() {
+  async function validateCode() {
     const code = accessCodeInput.value.trim().toUpperCase();
     if (!code) {
       codeError.textContent = "Entre un code d'acc\u00e8s";
       return;
     }
-    if (isCodeValid(code)) {
-      hasAccess = true;
-      var now = new Date();
-      currentSession = { plan: "unlimited", drawsAllowed: UNLIMITED_DAILY_LIMIT, drawsUsed: 0, createdAt: now.toISOString(), expiresAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString() };
-      saveSession(currentSession);
-      // FIXED: Reset daily draws when entering a new code (new month)
-      saveDailyDraws({ date: getTodayKey(), count: 0 });
-      updateDrawsDisplay();
-      codeError.textContent = "";
-      showScreen("screen-key");
-    } else {
-      codeError.textContent = "Code invalide. V\u00e9rifie ton code ou choisis une offre.";
-      accessCodeInput.focus();
+    // Validate via API
+    try {
+      var response = await fetch("https://lartdimue.me/oracle-api/validate.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: code })
+      });
+      var data = await response.json();
+      if (data.valid) {
+        hasAccess = true;
+        var now = new Date();
+        currentSession = { plan: "unlimited", drawsAllowed: UNLIMITED_DAILY_LIMIT, drawsUsed: 0, createdAt: now.toISOString(), expiresAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString() };
+        saveSession(currentSession);
+        saveDailyDraws({ date: getTodayKey(), count: 0 });
+        updateDrawsDisplay();
+        codeError.textContent = "";
+        showScreen("screen-key");
+      } else {
+        // Fallback: check local VALID_CODES
+        if (isCodeValid(code)) {
+          hasAccess = true;
+          var now2 = new Date();
+          currentSession = { plan: "unlimited", drawsAllowed: UNLIMITED_DAILY_LIMIT, drawsUsed: 0, createdAt: now2.toISOString(), expiresAt: new Date(now2.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString() };
+          saveSession(currentSession);
+          saveDailyDraws({ date: getTodayKey(), count: 0 });
+          updateDrawsDisplay();
+          codeError.textContent = "";
+          showScreen("screen-key");
+        } else {
+          codeError.textContent = "Code invalide. V\u00e9rifie ton code ou choisis une offre.";
+          accessCodeInput.focus();
+        }
+      }
+    } catch (e) {
+      // If API fails, fallback to local validation
+      if (isCodeValid(code)) {
+        hasAccess = true;
+        var now3 = new Date();
+        currentSession = { plan: "unlimited", drawsAllowed: UNLIMITED_DAILY_LIMIT, drawsUsed: 0, createdAt: now3.toISOString(), expiresAt: new Date(now3.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString() };
+        saveSession(currentSession);
+        saveDailyDraws({ date: getTodayKey(), count: 0 });
+        updateDrawsDisplay();
+        codeError.textContent = "";
+        showScreen("screen-key");
+      } else {
+        codeError.textContent = "Code invalide. V\u00e9rifie ton code ou choisis une offre.";
+        accessCodeInput.focus();
+      }
     }
   }
   // ---- STRIPE PAYMENT LINKS ----
