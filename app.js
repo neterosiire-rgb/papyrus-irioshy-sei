@@ -181,9 +181,9 @@
   const PLAN_DRAWS = {
     single: 1,
     triple: 3,
-    unlimited: 5
+    unlimited: 3
   };
-  const UNLIMITED_DAILY_LIMIT = 5;
+  const UNLIMITED_DAILY_LIMIT = 3;
   // ---- SESSION / persistent storage ----
   var _store = window["local" + "Storage"];
   function getSession() {
