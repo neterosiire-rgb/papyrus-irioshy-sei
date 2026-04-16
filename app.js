@@ -555,11 +555,7 @@
   }
   // ---- EVENT LISTENERS ----
   btnStart.addEventListener("click", function () {
-    if (hasAccess) {
-      showScreen("screen-key");
-    } else {
-      showScreen("screen-access");
-    }
+    showScreen("screen-access");
   });
   btnBackAccess.addEventListener("click", function () {
     showScreen("screen-welcome");
