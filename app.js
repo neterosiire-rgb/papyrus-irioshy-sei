@@ -409,9 +409,9 @@
   }
   // ---- STRIPE PAYMENT LINKS ----
   const PAYMENT_LINKS = {
-            single: "https://buy.stripe.com/00waEY0GSbvngaz4oF1Nu06",
-            triple: "https://buy.stripe.com/5kQ9AU3T49nf3nN3kB1Nu07",
-            unlimited: "https://buy.stripe.com/14A14o1KW7f7e2r2gx1Nu08"
+            single: "https://buy.stripe.com/fZu28s2P08jb3nNf3j1Nu09",
+            triple: "https://buy.stripe.com/fZu28s2P08jb3nNf3j1Nu09",
+            unlimited: "https://buy.stripe.com/fZu28s2P08jb3nNf3j1Nu09"
   };
   function handlePlanChoice(plan) {
     const link = PAYMENT_LINKS[plan];
